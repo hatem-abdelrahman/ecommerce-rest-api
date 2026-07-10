@@ -4,27 +4,9 @@ import { z } from "zod";
 export const validate = (schema) => (req, res, next) => {
   try {
     schema.parse(req.body);
-    next();
+    next(); // All fields are valid, move to the controller
   } catch (error) {
-    // Check if the error is actually a Zod validation error
-    if (error instanceof z.ZodError) {
-      // Use error.issues (the official Zod array of errors) with a fallback to []
-      const issues = error.issues || [];
-
-      return res.status(400).json({
-        message: "Validation failed",
-        errors: issues.map((err) => ({
-          field: err.path.join("."),
-          message: err.message,
-        })),
-      });
-    }
-    // If it's a different runtime error, log it and return 500
-    console.error("Unexpected validation error:", error);
-    return res.status(500).json({
-      message: "An unexpected error occurred during validation",
-      error: error.message,
-    });
+    next(error); // Pass the error directly to the Centralized Error Handler!
   }
 };
 
