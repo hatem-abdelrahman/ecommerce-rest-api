@@ -188,6 +188,11 @@ export const updateOrderToDelivered = async (req, res) => {
     const order = await Order.findById(req.params.id);
 
     if (order) {
+      if (!order.isPaid) {
+        return res
+          .status(400)
+          .json({ message: "Cannot deliver an unpaid order" });
+      }
       order.isDelivered = true;
       order.deliveredAt = Date.now();
 
