@@ -9,13 +9,14 @@ import {
   updateOrderToDelivered,
   getOrders,
 } from "../controllers/orderController.js";
+import { validate, orderSchema } from "../middleware/validator.js";
 
 const router = express.Router();
 
 // 1. Group routes by path '/'
 router
   .route("/")
-  .post(protect, addOrderItems) // POST /api/orders
+  .post(protect, validate(orderSchema), addOrderItems) // POST /api/orders
   .get(protect, admin, getOrders); // GET /api/orders (Admin only)
 
 // 2. Route for user's personal orders '/myorders'

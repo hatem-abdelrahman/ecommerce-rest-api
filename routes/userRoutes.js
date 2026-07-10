@@ -7,17 +7,23 @@ import {
   updateUserProfile,
   getAllUsers,
 } from "../controllers/userController.js";
+import {
+  validate,
+  loginSchema,
+  registerSchema,
+} from "../middleware/validator.js";
+
 const router = express.Router();
 
 // @desc    Login a user
 // @route   POST /api/login
 // @access  Public
-router.post("/login", authUser);
+router.post("/login", validate(loginSchema), authUser);
 
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-router.post("/", registerUser);
+router.post("/", validate(registerSchema), registerUser);
 
 // @desc    Get user profile
 // @route   GET /api/users/profile

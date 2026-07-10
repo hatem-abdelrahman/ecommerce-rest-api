@@ -8,6 +8,7 @@ import {
   updateProduct,
   createProductReview,
 } from "../controllers/productController.js";
+import { validate, reviewSchema } from "../middleware/validator.js";
 
 const router = express.Router();
 
@@ -25,6 +26,8 @@ router
   .delete(protect, admin, deleteProduct); // DELETE /api/products/:id
 
 // 3. Route for reviews '/:id/reviews'
-router.route("/:id/reviews").post(protect, createProductReview);
+router
+  .route("/:id/reviews")
+  .post(protect, validate(reviewSchema), createProductReview);
 
 export default router;
